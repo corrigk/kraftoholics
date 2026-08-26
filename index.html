@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kraftoholics — Craft Boutique</title>
+<meta name="description" content="Waterproof wax rope bracelets and hand-painted watercolor keepsakes, handmade by Kraftoholics.">
+<link rel="icon" href="assets/logo.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div class="demo-banner" id="demoBanner" style="display:none;">
+  Demo mode — showing sample products. <a href="https://github.com" target="_blank" rel="noopener">Connect Supabase</a> (see <code>README.md</code>) to go live with real listings, orders &amp; messages.
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="site">
+  <div class="nav">
+    <a href="#home" class="brand">
+      <img src="assets/logo.jpg" alt="Kraftoholics logo">
+      <div class="name">Kraftoholics<span>Craft Boutique</span></div>
+    </a>
+
+    <nav class="nav-links" id="navLinks">
+      <a href="#home">Home</a>
+      <a href="#shop">Shop</a>
+      <a href="#story">Our Story</a>
+      <a href="#faq">FAQ &amp; Shipping</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#contact">Contact</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="icon-btn" id="accountNavBtn" aria-label="Account">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4.5 5-6.5 8-6.5s6.5 2 8 6.5"/></svg>
+      </button>
+      <button class="icon-btn" id="chatNavBtn" aria-label="Message the owner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </button>
+      <button class="icon-btn" id="cartBtn" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 2H2"/><circle cx="9.5" cy="20" r="1.2"/><circle cx="17.5" cy="20" r="1.2"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="hamburger icon-btn" id="hamburgerBtn" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="home" class="hero wrap">
+  <div>
+    <div class="eyebrow">Waterproof wax bracelets &amp; hand-painted keepsakes</div>
+    <h1>Little charms and blessings, <em>tied to last.</em></h1>
+    <p class="sub">Waterproof wax rope bracelets with meaningful charms — Catholic, school spirit or fully custom — plus hand-painted watercolor art for the gifts that mean a little more.</p>
+    <div class="hero-cta">
+      <a href="#shop" class="btn">Shop Bracelets</a>
+      <a href="#story" class="btn ghost">Meet the Maker</a>
+    </div>
+    <div class="hero-badges">
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13z"/></svg>
+        Waterproof — swim, shower, repeat
+      </div>
+      <div class="hero-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="14" r="7"/><path d="M9 3l3 4 3-4"/><path d="M12 10v8M8 14h8" stroke-width="1"/></svg>
+        A charm for every milestone
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-art">
+    <!-- signature line art: a wax cord bracelet with a medal charm, echoing the logo's circular badge -->
+    <svg viewBox="0 0 320 380" fill="none" stroke="var(--ink)" stroke-width="1.4" stroke-linecap="round">
+      <circle cx="160" cy="185" r="150" stroke-width="1" stroke="var(--line)"/>
+      <ellipse cx="160" cy="150" rx="98" ry="76" stroke-width="2.2"/>
+      <ellipse cx="160" cy="150" rx="98" ry="76" stroke-width="1" stroke-dasharray="2 6" opacity="0.55"/>
+      <circle cx="76" cy="118" r="4" fill="var(--ink)"/>
+      <circle cx="246" cy="128" r="4" fill="var(--ink)"/>
+      <circle cx="204" cy="218" r="4" fill="var(--ink)"/>
+      <circle cx="112" cy="220" r="4" fill="var(--ink)"/>
+      <path d="M150 224c4 10 16 10 20 0" stroke-width="1.6"/>
+      <path d="M160 226v20" stroke-width="1.4"/>
+      <circle cx="160" cy="270" r="32" stroke-width="1.6"/>
+      <circle cx="160" cy="270" r="25" stroke-width="0.9" opacity="0.6"/>
+      <path d="M160 253v34M144 270h32" stroke-width="1.3"/>
+    </svg>
+  </div>
+</section>
+
+<!-- ============ TRUST STRIP ============ -->
+<section class="trust reveal">
+  <div class="wrap">
+    <div class="trust-item">
+      <div class="trust-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 2s7 8 7 13a7 7 0 0 1-14 0c0-5 7-13 7-13z"/></svg></div>
+      <div><h4>Truly waterproof</h4><p>Wax rope holds up through swimming, sports and showers.</p></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></div>
+      <div><h4>Ready within 3–5 days</h4><p>Most orders are tied, blessed and shipped that week.</p></div>
+    </div>
+    <div class="trust-item">
+      <div class="trust-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="14" r="7"/><path d="M9 3l3 4 3-4"/><path d="M12 10v8M8 14h8" stroke-width="1"/></svg></div>
+      <div><h4>Custom orders welcome</h4><p>Pick a rope color, charm or add a name — just ask.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOP ============ -->
+<section id="shop" class="wrap reveal">
+  <div class="shop-head">
+    <div class="section-head" style="margin-bottom:0;">
+      <div class="eyebrow">The Shop</div>
+      <h2>Fresh off the workbench</h2>
+      <p class="lede">Click into any piece for sizing, charm and color options. A rotating little collection — once a batch sells out, it's gone until the next one.</p>
+    </div>
+    <div class="filters" id="filters">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="catholic">Catholic Bracelets</button>
+      <button class="filter-btn" data-filter="school">School Bracelets</button>
+      <button class="filter-btn" data-filter="custom">Custom Bracelets</button>
+      <button class="filter-btn" data-filter="watercolor">Watercolor Art</button>
+    </div>
+  </div>
+
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<!-- ============ STORY ============ -->
+<section id="story" class="story reveal">
+  <div class="wrap">
+    <div class="story-art">
+      <svg viewBox="0 0 200 200" fill="none" stroke="var(--ink)" stroke-width="1.3">
+        <path d="M46 154 L118 82" stroke-width="1.6"/>
+        <path d="M110 74 L126 90" stroke-width="1.6"/>
+        <rect x="112" y="66" width="10" height="22" rx="2" transform="rotate(45 117 77)"/>
+        <path d="M42 158c-4 4-4 10 0 14 4 4 10 4 14 0" stroke-width="1.1"/>
+        <circle cx="148" cy="140" r="27" stroke-width="1.6"/>
+        <circle cx="148" cy="140" r="20" stroke-width="0.9" stroke-dasharray="2 5" opacity="0.6"/>
+        <circle cx="148" cy="113" r="3" fill="var(--ink)"/>
+      </svg>
+    </div>
+    <div class="story-text">
+      <div class="eyebrow">Our Story</div>
+      <h2>Started with a spool of wax cord and a First Communion gift.</h2>
+      <p>Kraftoholics began with a spool of waterproof wax cord, a box of tiny charms, and a First Communion gift that needed to be just right. That one bracelet turned into requests for Confirmations, school teams and friends who just wanted something durable enough for every day and meaningful enough to keep.</p>
+      <p>The watercolor pieces came a little later — hand-painted saints, scripture and keepsake letters, for the moments a bracelet can't quite cover. Thanks for stopping by the shop — replace this paragraph with your sister's real story, in her own words.</p>
+      <div class="story-sign">— the maker behind Kraftoholics</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ & SHIPPING ============ -->
+<section id="faq" class="wrap reveal">
+  <div class="section-head">
+    <div class="eyebrow">Good to Know</div>
+    <h2>FAQ &amp; shipping</h2>
+    <p class="lede">The questions we get most — reach out in a message if yours isn't here.</p>
+  </div>
+  <div class="faq-list">
+    <details class="faq-item" open>
+      <summary>Are the bracelets really waterproof?</summary>
+      <p>Yes — the wax rope is sealed and knotted to hold up through swimming, showers and everyday sweat. It's meant to be worn every day, not just on special occasions.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Can I get a bracelet in my school's colors?</summary>
+      <p>Absolutely. Pick from the rope color and charm options on any bracelet's product page, or send a message with your school colors and mascot for a fully custom set.</p>
+    </details>
+    <details class="faq-item">
+      <summary>How does a custom order work?</summary>
+      <p>Message us through the chat bubble or contact form with the colors, charm and any personalization (like a name or initial) you'd like. Most custom pieces are confirmed within a day and made to order.</p>
+    </details>
+    <details class="faq-item">
+      <summary>How long does shipping take?</summary>
+      <p>Most orders are made, wrapped and shipped within 3–5 days. Fully custom pieces may take a little longer — you'll be messaged with a timeline before it ships.</p>
+    </details>
+    <details class="faq-item">
+      <summary>Do you accept returns or exchanges?</summary>
+      <p>Ready-made pieces can be exchanged within 14 days if unworn. Because custom and personalized pieces are made just for you, those are final sale — reach out if something arrives damaged.</p>
+    </details>
+    <details class="faq-item">
+      <summary>How do I care for a watercolor print?</summary>
+      <p>Keep it out of direct sunlight and away from moisture, and it'll hold its color for years. Framing behind glass is the best way to keep it looking fresh.</p>
+    </details>
+  </div>
+</section>
+
+<!-- ============ REVIEWS ============ -->
+<section id="reviews" class="wrap reveal">
+  <div class="section-head">
+    <div class="eyebrow">From Our Customers</div>
+    <h2>Kind words from the mailbox</h2>
+    <p class="lede">A few notes customers have sent in. Yours could be next.</p>
+  </div>
+
+  <div class="reviews-grid" id="reviewsGrid"></div>
+
+  <div class="review-form-wrap">
+    <div>
+      <h3 style="font-size:24px;">Leave a review</h3>
+      <p class="lede" style="font-size:14px;">Tell future customers what you thought — it goes a long way for a small shop.</p>
+    </div>
+    <form class="review-form" id="reviewForm">
+      <div>
+        <label class="field-label">Your rating</label>
+        <div class="star-picker" id="starPicker">
+          <button type="button" data-val="1"><svg viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 1-5.2 5 1.2 7-6-3.4-6 3.4 1.2-7L2 9.5l7-1z"/></svg></button>
+          <button type="button" data-val="2"><svg viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 1-5.2 5 1.2 7-6-3.4-6 3.4 1.2-7L2 9.5l7-1z"/></svg></button>
+          <button type="button" data-val="3"><svg viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 1-5.2 5 1.2 7-6-3.4-6 3.4 1.2-7L2 9.5l7-1z"/></svg></button>
+          <button type="button" data-val="4"><svg viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 1-5.2 5 1.2 7-6-3.4-6 3.4 1.2-7L2 9.5l7-1z"/></svg></button>
+          <button type="button" data-val="5"><svg viewBox="0 0 24 24"><path d="M12 2l3 6.5 7 1-5.2 5 1.2 7-6-3.4-6 3.4 1.2-7L2 9.5l7-1z"/></svg></button>
+        </div>
+      </div>
+      <div>
+        <label class="field-label" for="revName">Name</label>
+        <input class="field" id="revName" placeholder="Your name" required>
+      </div>
+      <div>
+        <label class="field-label" for="revMsg">Your review</label>
+        <textarea class="field" id="revMsg" placeholder="What did you order, and how did it go?" required></textarea>
+      </div>
+      <button type="submit" class="btn" style="align-self:flex-start;">Post Review</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ CONTACT / MESSAGING ============ -->
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Get In Touch</div>
+      <h2>Chat with the maker</h2>
+      <p class="lede">Questions about an order, a custom request, or just want to say hi? Send a message below or use the chat bubble in the corner.</p>
+    </div>
+    <div class="contact-grid">
+      <form class="contact-form" id="contactForm">
+        <div>
+          <label class="field-label" for="cName">Name</label>
+          <input class="field" id="cName" placeholder="Your name" required>
+        </div>
+        <div>
+          <label class="field-label" for="cEmail">Email</label>
+          <input class="field" id="cEmail" type="email" placeholder="you@example.com" required>
+        </div>
+        <div>
+          <label class="field-label" for="cMsg">Message</label>
+          <textarea class="field" id="cMsg" placeholder="How can we help?" required></textarea>
+        </div>
+        <button type="submit" class="btn" style="align-self:flex-start;">Send Message</button>
+      </form>
+      <div class="contact-info">
+        <div class="contact-info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg>
+          <div><h4>Email</h4><p>hello@kraftoholics.example</p></div>
+        </div>
+        <div class="contact-info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 21s-7-4.6-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.4-9.5 9-9.5 9z"/></svg>
+          <div><h4>Studio</h4><p>Somewhere with good light &amp; a messy desk</p></div>
+        </div>
+        <div class="contact-info-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+          <div><h4>Response time</h4><p>Usually within a day — it's a one-woman shop!</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWSLETTER ============ -->
+<section class="newsletter">
+  <div class="wrap">
+    <h3>Get first look at new drops &amp; restocks.</h3>
+    <form class="news-form" id="newsForm">
+      <input class="field" type="email" id="newsEmail" placeholder="you@example.com" required>
+      <button class="btn" type="submit">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#home" class="brand">
+          <img src="assets/logo.jpg" alt="Kraftoholics logo">
+          <div class="name">Kraftoholics<span>Craft Boutique</span></div>
+        </a>
+        <p>Waterproof wax rope bracelets and hand-painted watercolor keepsakes — made in small batches, packed with care.</p>
+        <div class="foot-social">
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="#" aria-label="Pinterest"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M9 17c1-3 1.5-6 2-9M12 13a3 3 0 1 0-3-4"/></svg></a>
+          <a href="#" aria-label="Etsy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 3h9M6 3v18M6 12h7M6 21h9"/></svg></a>
+        </div>
+      </div>
+      <div class="foot-col">
+        <h5>Shop</h5>
+        <ul>
+          <li><a href="#shop">All Products</a></li>
+          <li><a href="#shop">Catholic Bracelets</a></li>
+          <li><a href="#shop">School Bracelets</a></li>
+          <li><a href="#shop">Watercolor Art</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>About</h5>
+        <ul>
+          <li><a href="#story">Our Story</a></li>
+          <li><a href="#faq">FAQ &amp; Shipping</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Say Hello</h5>
+        <ul>
+          <li><a href="#">hello@kraftoholics.example</a></li>
+          <li><a href="#contact">Send a message</a></li>
+          <li><a href="#" id="footAccountLink">My Account</a></li>
+        </ul>
+      </div>
+    </div>
+    <hr class="hair">
+    <div class="foot-bottom">
+      <span>© <span id="year"></span> Kraftoholics Craft Boutique. All rights reserved.</span>
+      <span class="foot-note">Template — connect Supabase for real orders, messaging &amp; reviews</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ CART DRAWER ============ -->
+<div class="backdrop" id="backdrop"></div>
+<aside class="drawer" id="cartDrawer" aria-label="Shopping cart">
+  <div class="drawer-head">
+    <h3>Your Cart</h3>
+    <button class="drawer-close" id="drawerClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot" style="display:none;">
+    <div class="subtotal-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+    <button class="btn" id="checkoutBtn">Checkout</button>
+    <p class="drawer-note">Shipping &amp; taxes calculated at checkout</p>
+  </div>
+</aside>
+
+<!-- ============ CHECKOUT MODAL ============ -->
+<div class="modal" id="checkoutModal">
+  <div class="modal-panel">
+    <button class="modal-close" id="modalClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <div class="steps">
+      <div class="step-dot active" id="dot1">1</div>
+      <div class="step-line"></div>
+      <div class="step-dot" id="dot2">2</div>
+      <div class="step-line"></div>
+      <div class="step-dot" id="dot3">3</div>
+    </div>
+
+    <div class="modal-step active" id="step1">
+      <h3 style="font-size:22px;">Review your order</h3>
+      <div id="modalCartList" style="margin:18px 0;"></div>
+      <div class="subtotal-row"><span>Subtotal</span><span id="modalSubtotal">$0.00</span></div>
+      <button class="btn" style="width:100%; margin-top:14px;" id="toStep2">Continue to Details</button>
+    </div>
+
+    <div class="modal-step" id="step2">
+      <h3 style="font-size:22px;">Delivery details</h3>
+      <form id="detailsForm" style="display:flex; flex-direction:column; gap:14px; margin-top:18px;">
+        <div class="form-grid-2">
+          <div><label class="field-label">First name</label><input class="field" required></div>
+          <div><label class="field-label">Last name</label><input class="field" required></div>
+        </div>
+        <div><label class="field-label">Email</label><input class="field" type="email" required></div>
+        <div><label class="field-label">Shipping address</label><input class="field" required></div>
+        <div class="form-grid-2">
+          <div><label class="field-label">City</label><input class="field" required></div>
+          <div><label class="field-label">ZIP / Postal</label><input class="field" required></div>
+        </div>
+        <div><label class="field-label">Card number</label><input class="field" placeholder="•••• •••• •••• ••••" required></div>
+        <button type="submit" class="btn" style="width:100%; margin-top:6px;">Place Order</button>
+      </form>
+    </div>
+
+    <div class="modal-step" id="step3">
+      <div class="confirm-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--moss)" stroke-width="1.3"><circle cx="12" cy="12" r="10"/><path d="M8 12l3 3 5-6"/></svg>
+        <h3 style="font-size:22px;">Order placed!</h3>
+        <p style="color:var(--ink-soft); font-size:14px;" id="orderModeNote">This is a template — no real payment was processed.</p>
+        <div class="order-no" id="orderNo">#KH-0000</div>
+        <button class="btn ghost" id="closeConfirm">Back to Shopping</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CHAT WIDGET ============ -->
+<button class="chat-bubble" id="chatBubble" aria-label="Open chat">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <div class="chat-avatar"><img src="assets/logo.jpg" alt="Owner avatar"></div>
+    <div>
+      <h5>Kraftoholics</h5>
+      <span>Usually replies within a day</span>
+    </div>
+  </div>
+  <div class="chat-body" id="chatBody"></div>
+  <div class="chat-input-row">
+    <input type="text" id="chatInput" placeholder="Type a message…">
+    <button id="chatSend" aria-label="Send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
+  </div>
+</div>
+
+<!-- ============ PRODUCT DETAIL PAGE ============ -->
+<div class="page-overlay" id="productPage">
+  <div class="overlay-nav">
+    <a href="#shop" class="back-link" id="pdBack">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 18l-6-6 6-6"/></svg>
+      Back to Shop
+    </a>
+    <button class="overlay-close" id="pdClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="pd-wrap">
+    <div class="pd-grid">
+      <div class="pd-media" id="pdMedia"></div>
+      <div>
+        <span class="pd-cat" id="pdCat"></span>
+        <h1 class="pd-title" id="pdTitle"></h1>
+        <div class="pd-price" id="pdPrice"></div>
+        <p class="pd-desc" id="pdDesc"></p>
+
+        <div id="pdOptions"></div>
+
+        <div class="pd-qty-row">
+          <label class="field-label" style="margin:0;">Qty</label>
+          <div class="qty-row" style="border:1px solid var(--line); padding:6px 12px;">
+            <button id="pdQtyMinus">−</button>
+            <span id="pdQty">1</span>
+            <button id="pdQtyPlus">+</button>
+          </div>
+        </div>
+
+        <button class="btn" id="pdAddBtn">Add to Cart</button>
+        <p class="pd-note">Custom colors, charms or wording? Message us from the chat bubble and we'll confirm details before it ships.</p>
+      </div>
+    </div>
+
+    <div class="pd-related">
+      <h3>You might also like</h3>
+      <div class="mini-grid" id="pdRelated"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ACCOUNT PAGE ============ -->
+<div class="page-overlay" id="accountPage">
+  <div class="overlay-nav">
+    <a href="#home" class="back-link" id="acctBack">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M15 18l-6-6 6-6"/></svg>
+      Back to Site
+    </a>
+    <button class="overlay-close" id="acctClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="account-wrap">
+    <h2 style="text-align:center; font-size:26px;">Welcome to Kraftoholics</h2>
+    <p class="lede" style="text-align:center; margin:0 auto 30px; font-size:14px;">Sign in or create an account to save your cart and track orders.</p>
+
+    <div class="account-tabs">
+      <button class="account-tab active" id="tabSignup">Sign Up</button>
+      <button class="account-tab" id="tabLogin">Log In</button>
+    </div>
+
+    <form class="account-form" id="accountForm">
+      <div id="signupOnlyName">
+        <label class="field-label" for="acctName">Name</label>
+        <input class="field" id="acctName" placeholder="Your name">
+      </div>
+      <div>
+        <label class="field-label" for="acctEmail">Email</label>
+        <input class="field" id="acctEmail" type="email" placeholder="you@example.com" required>
+      </div>
+      <div>
+        <label class="field-label" for="acctPass">Password</label>
+        <input class="field" id="acctPass" type="password" placeholder="••••••••" required>
+      </div>
+      <div id="signupOnlyConfirm">
+        <label class="field-label" for="acctConfirm">Confirm password</label>
+        <input class="field" id="acctConfirm" type="password" placeholder="••••••••">
+      </div>
+      <label class="account-check">
+        <input type="checkbox" id="acctNewsletter" checked>
+        Sign me up for new-drop emails too
+      </label>
+      <button type="submit" class="btn" id="acctSubmitBtn" style="width:100%;">Create Account</button>
+    </form>
+    <p class="account-note">This is a template — accounts are stored in memory only. Connect Supabase Auth to enable real sign-up, login and saved carts.</p>
+  </div>
+</div>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast"></div>
+
+<!-- Supabase client (CDN) — must load before supabaseClient.js -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabaseClient.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

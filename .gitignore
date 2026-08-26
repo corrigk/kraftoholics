@@ -1,0 +1,14 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+
+# Local env files, if you ever add build tooling later
+.env
+.env.local
+
+# Logs
+*.log
