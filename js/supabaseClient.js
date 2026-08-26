@@ -14,7 +14,7 @@
    the frontend — that key bypasses all security rules.
 ============================================================ */
 
-const SUPABASE_URL = "https://htzrbefwjmxhbrseznxo.supabase.co/rest/v1/";
+const SUPABASE_URL = "https://htzrbefwjmxhbrseznxo.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_gIUDocP3WY2UKHR1HZi2cA_QqK2osZX";
 
 const IS_SUPABASE_CONFIGURED =
