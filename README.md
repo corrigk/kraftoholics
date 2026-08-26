@@ -126,7 +126,7 @@ git push -u origin main
 2. Under "Build and deployment", set **Source** to "Deploy from a branch",
    branch `main`, folder `/ (root)`, then **Save**.
 3. After a minute, your site will be live at
-   `https://YOUR-USERNAME.github.io/kraftoholics/`.
+   `https://corrigk.github.io/kraftoholics/`.
 4. The admin dashboard is at `.../admin.html` — nothing stops someone from
    finding that URL, but they can't do anything without her login, and the
    database rules block writes from anyone who isn't marked as an admin.

@@ -79,7 +79,7 @@ document.getElementById("loginForm").addEventListener("submit", async e => {
   btn.disabled = false; btn.textContent = "Log In";
 
   if(error){
-    errEl.textContent = "Couldn't sign in — check your email and password.";
+    errEl.textContent = error.message || "Couldn't sign in — check your email and password.";
     errEl.classList.add("show");
     return;
   }
