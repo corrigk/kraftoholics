@@ -116,6 +116,16 @@ function timeAgo(iso){
 const productGrid = document.getElementById("productGrid");
 function findProduct(id){ return PRODUCTS.find(p => String(p.id) === String(id)); }
 
+function stockBadgeHTML(p){
+  if(p.stock_quantity === null || p.stock_quantity === undefined) return "";
+  if(p.stock_quantity <= 0) return `<div class="stock-note sold-out">Sold out</div>`;
+  if(p.stock_quantity <= 5) return `<div class="stock-note low">Only ${p.stock_quantity} left</div>`;
+  return "";
+}
+function isSoldOut(p){
+  return p.stock_quantity !== null && p.stock_quantity !== undefined && p.stock_quantity <= 0;
+}
+
 function renderProducts(filter="all"){
   const list = PRODUCTS.filter(p => filter === "all" || p.category === filter);
   if(list.length === 0){
@@ -124,6 +134,7 @@ function renderProducts(filter="all"){
   }
   productGrid.innerHTML = "";
   list.forEach(p => {
+    const soldOut = isSoldOut(p);
     const card = document.createElement("div");
     card.className = "product-card";
     card.dataset.id = p.id;
@@ -135,11 +146,11 @@ function renderProducts(filter="all"){
       <div class="product-body">
         <h4>${escapeHtml(p.name)}</h4>
         <p>${escapeHtml(p.description || "")}</p>
+        ${stockBadgeHTML(p)}
         <div class="product-foot">
           <span class="price">$${Number(p.price).toFixed(2)}</span>
-          <button class="add-btn" data-id="${p.id}">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12h14"/></svg>
-            Add
+          <button class="add-btn" data-id="${p.id}" ${soldOut ? "disabled" : ""}>
+            ${soldOut ? "Sold Out" : `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 5v14M5 12h14"/></svg> Add`}
           </button>
         </div>
       </div>`;
@@ -157,7 +168,7 @@ document.getElementById("filters").addEventListener("click", e => {
 
 productGrid.addEventListener("click", e => {
   const btn = e.target.closest(".add-btn");
-  if(btn){ addToCart(btn.dataset.id); return; }
+  if(btn){ if(!btn.disabled) addToCart(btn.dataset.id); return; }
   const card = e.target.closest(".product-card");
   if(card){ openProductPage(card.dataset.id); }
 });
@@ -278,8 +289,14 @@ function openProductPage(id){
   document.getElementById("pdCat").textContent = CATEGORY_LABEL[p.category] || p.category;
   document.getElementById("pdTitle").textContent = p.name;
   document.getElementById("pdPrice").textContent = `$${Number(p.price).toFixed(2)}`;
+  document.getElementById("pdStock").innerHTML = stockBadgeHTML(p);
   document.getElementById("pdDesc").textContent = p.description || "";
   document.getElementById("pdQty").textContent = pdQty;
+
+  const soldOut = isSoldOut(p);
+  const addBtn = document.getElementById("pdAddBtn");
+  addBtn.disabled = soldOut;
+  addBtn.textContent = soldOut ? "Sold Out" : "Add to Cart";
 
   const isBracelet = BRACELET_CATS.includes(p.category);
   const optionsEl = document.getElementById("pdOptions");
@@ -325,6 +342,7 @@ document.getElementById("pdClose").addEventListener("click", closeProductPage);
 document.getElementById("pdQtyPlus").addEventListener("click", () => { pdQty++; document.getElementById("pdQty").textContent = pdQty; });
 document.getElementById("pdQtyMinus").addEventListener("click", () => { if(pdQty>1) pdQty--; document.getElementById("pdQty").textContent = pdQty; });
 document.getElementById("pdAddBtn").addEventListener("click", () => {
+  if(document.getElementById("pdAddBtn").disabled) return;
   const options = {};
   document.querySelectorAll("#pdOptions [data-option-label]").forEach(el => {
     if(el.value && el.value.trim()) options[el.dataset.optionLabel] = el.value.trim();

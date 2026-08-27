@@ -66,6 +66,10 @@ Deno.serve(async (req) => {
       const details = full.customer_details;
       const shipping = (full as any).shipping_details?.address || details?.address || {};
 
+      // Pull out the optional gift note, if the customer filled it in.
+      const giftField = (full as any).custom_fields?.find((f: any) => f.key === "gift_note");
+      const giftNote = giftField?.text?.value || null;
+
       const { data: order, error: orderErr } = await supabaseAdmin
         .from("orders")
         .insert({
@@ -77,6 +81,7 @@ Deno.serve(async (req) => {
           subtotal: (full.amount_total ?? 0) / 100,
           status: "placed",
           stripe_session_id: session.id,
+          gift_note: giftNote,
         })
         .select()
         .single();

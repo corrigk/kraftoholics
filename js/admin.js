@@ -132,7 +132,13 @@ function renderProductsTable(){
   if(productsCache.length === 0){ tbody.innerHTML = ""; empty.style.display = "block"; return; }
   empty.style.display = "none";
 
-  tbody.innerHTML = productsCache.map(p => `
+  tbody.innerHTML = productsCache.map(p => {
+    const stockCell = p.stock_quantity === null || p.stock_quantity === undefined
+      ? `<span style="color:var(--ink-soft);">Unlimited</span>`
+      : p.stock_quantity <= 0
+        ? `<span class="pill inactive">Sold out</span>`
+        : `<span class="${p.stock_quantity <= 5 ? 'pill unread' : ''}">${p.stock_quantity} left</span>`;
+    return `
     <tr>
       <td>
         <div class="row-name">
@@ -144,6 +150,7 @@ function renderProductsTable(){
       </td>
       <td>${CATEGORY_LABEL[p.category] || p.category}</td>
       <td>$${Number(p.price).toFixed(2)}</td>
+      <td>${stockCell}</td>
       <td><span class="pill ${p.is_active ? "active" : "inactive"}">${p.is_active ? "Active" : "Hidden"}</span></td>
       <td>
         <div class="row-actions">
@@ -152,7 +159,8 @@ function renderProductsTable(){
           <button data-action="delete" data-id="${p.id}" class="danger">Delete</button>
         </div>
       </td>
-    </tr>`).join("");
+    </tr>`;
+  }).join("");
 }
 
 document.getElementById("productsTbody").addEventListener("click", async e => {
@@ -193,6 +201,7 @@ function openProductForm(product=null){
   document.getElementById("pfCategory").value = product ? product.category : "catholic";
   document.getElementById("pfTag").value = product ? (product.tag || "") : "";
   document.getElementById("pfActive").value = product ? String(product.is_active) : "true";
+  document.getElementById("pfStock").value = (product && product.stock_quantity !== null && product.stock_quantity !== undefined) ? product.stock_quantity : "";
   document.getElementById("pfRope").value = product && product.rope_colors ? product.rope_colors.join(", ") : "";
   document.getElementById("pfCharms").value = product && product.charms ? product.charms.join(", ") : "";
   document.getElementById("pfSizes").value = product && product.sizes ? product.sizes.join(", ") : "";
@@ -245,6 +254,7 @@ productForm.addEventListener("submit", async e => {
       document.getElementById("pfUploadProgress").classList.remove("show");
     }
 
+    const stockRaw = document.getElementById("pfStock").value.trim();
     const payload = {
       name: document.getElementById("pfName").value.trim(),
       description: document.getElementById("pfDesc").value.trim(),
@@ -252,6 +262,7 @@ productForm.addEventListener("submit", async e => {
       category: document.getElementById("pfCategory").value,
       tag: document.getElementById("pfTag").value.trim() || null,
       is_active: document.getElementById("pfActive").value === "true",
+      stock_quantity: stockRaw === "" ? null : Math.max(0, parseInt(stockRaw, 10) || 0),
       rope_colors: splitList(document.getElementById("pfRope").value),
       charms: splitList(document.getElementById("pfCharms").value),
       sizes: splitList(document.getElementById("pfSizes").value),
@@ -279,12 +290,15 @@ productForm.addEventListener("submit", async e => {
 /* ============================================================
    ORDERS
 ============================================================ */
+let ordersCache = [];
+
 async function loadOrders(){
   const { data, error } = await supabaseClient
     .from("orders")
     .select("*, order_items(*)")
     .order("created_at", { ascending:false });
   if(error){ showToast("Couldn't load orders", true); return; }
+  ordersCache = data || [];
 
   document.getElementById("statOrders").textContent = data.length;
   const tbody = document.getElementById("ordersTbody");
@@ -294,11 +308,14 @@ async function loadOrders(){
 
   tbody.innerHTML = data.map(o => {
     const items = (o.order_items || []).map(i => `${escapeHtml(i.product_name)} × ${i.qty}`).join("<br>");
+    const giftNote = o.gift_note
+      ? `<div style="margin-top:8px; padding-top:8px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-soft);"><strong style="color:var(--ink);">🎁 Gift note:</strong> ${escapeHtml(o.gift_note)}</div>`
+      : "";
     return `
       <tr>
         <td>${fmtDate(o.created_at)}</td>
         <td>${escapeHtml(o.customer_name)}<br><span style="color:var(--ink-soft); font-size:12px;">${escapeHtml(o.email)}</span></td>
-        <td>${items || "—"}</td>
+        <td style="white-space:normal; max-width:240px;">${items || "—"}${giftNote}</td>
         <td>$${Number(o.subtotal).toFixed(2)}</td>
         <td>
           <select class="status-select" data-id="${o.id}">
@@ -308,6 +325,8 @@ async function loadOrders(){
         <td><div class="row-actions"><button data-delete-order="${o.id}" class="danger">Delete</button></div></td>
       </tr>`;
   }).join("");
+
+  loadStats();
 }
 
 document.getElementById("ordersTbody").addEventListener("change", async e => {
@@ -324,6 +343,58 @@ document.getElementById("ordersTbody").addEventListener("click", async e => {
   showToast(error ? "Couldn't delete order" : "Order deleted");
   loadOrders();
 });
+
+/* ============================================================
+   STATS — computed from ordersCache, no extra fetch needed
+============================================================ */
+function loadStats(){
+  const active = ordersCache.filter(o => o.status !== "cancelled");
+  const totalRevenue = active.reduce((s,o) => s + Number(o.subtotal), 0);
+  const totalOrders = active.length;
+  const avgOrder = totalOrders ? totalRevenue / totalOrders : 0;
+
+  const now = new Date();
+  const thisMonthRevenue = active
+    .filter(o => {
+      const d = new Date(o.created_at);
+      return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth();
+    })
+    .reduce((s,o) => s + Number(o.subtotal), 0);
+
+  document.getElementById("statsCards").innerHTML = `
+    <div class="stat-card"><div class="stat-num">$${totalRevenue.toFixed(2)}</div><div class="stat-label">Total Revenue</div></div>
+    <div class="stat-card"><div class="stat-num">${totalOrders}</div><div class="stat-label">Orders Placed</div></div>
+    <div class="stat-card"><div class="stat-num">$${avgOrder.toFixed(2)}</div><div class="stat-label">Avg Order Value</div></div>
+    <div class="stat-card"><div class="stat-num">$${thisMonthRevenue.toFixed(2)}</div><div class="stat-label">This Month</div></div>
+  `;
+
+  const productMap = {};
+  active.forEach(o => {
+    (o.order_items || []).forEach(i => {
+      const key = i.product_name;
+      if(!productMap[key]) productMap[key] = { qty:0, revenue:0 };
+      productMap[key].qty += i.qty;
+      productMap[key].revenue += Number(i.unit_price) * i.qty;
+    });
+  });
+  const topProducts = Object.entries(productMap)
+    .map(([name, v]) => ({ name, ...v }))
+    .sort((a,b) => b.revenue - a.revenue)
+    .slice(0, 6);
+
+  const listEl = document.getElementById("topProductsList");
+  if(topProducts.length === 0){
+    listEl.innerHTML = `<p style="color:var(--ink-soft); font-size:14px;">No sales yet — this fills in once orders start coming in.</p>`;
+  } else {
+    const maxRevenue = topProducts[0].revenue || 1;
+    listEl.innerHTML = topProducts.map(p => `
+      <div class="top-product-row">
+        <div class="tp-name">${escapeHtml(p.name)}</div>
+        <div class="tp-bar-wrap"><div class="tp-bar" style="width:${Math.max(4, (p.revenue/maxRevenue)*100)}%"></div></div>
+        <div class="tp-value">${p.qty} sold · $${p.revenue.toFixed(2)}</div>
+      </div>`).join("");
+  }
+}
 
 /* ============================================================
    MESSAGES

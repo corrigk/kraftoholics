@@ -64,6 +64,15 @@ Deno.serve(async (req) => {
       mode: "payment",
       line_items,
       shipping_address_collection: { allowed_countries: ["US"] },
+      custom_fields: [
+        {
+          key: "gift_note",
+          label: { type: "custom", custom: "Is this a gift? Add a note (optional)" },
+          type: "text",
+          optional: true,
+          text: { maximum_length: 300 },
+        },
+      ],
       success_url: `${base}?checkout=success`,
       cancel_url: `${base}?checkout=cancelled`,
     });

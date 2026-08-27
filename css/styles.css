@@ -292,6 +292,11 @@
   .product-body{ padding:20px 22px 22px; display:flex; flex-direction:column; gap:10px; flex:1; }
   .product-body h4{ font-family:'Fraunces'; font-size:19px; font-weight:500; }
   .product-body p{ font-size:13px; color:var(--ink-soft); margin:0; flex:1; }
+  .stock-note{ font-size:12px; font-weight:500; letter-spacing:.02em; margin-top:-4px; }
+  .stock-note.low{ color:var(--ochre); }
+  .stock-note.sold-out{ color:var(--ink-soft); }
+  .add-btn:disabled{ opacity:.5; cursor:not-allowed; }
+  .add-btn:disabled:hover{ background:none; color:var(--ink); }
   .product-foot{ display:flex; align-items:center; justify-content:space-between; margin-top:6px; }
   .price{ font-family:'Fraunces'; font-size:17px; }
   .add-btn{
@@ -529,7 +534,8 @@
   .pd-media svg{ width:42%; height:42%; }
   .pd-cat{ font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--moss); margin-bottom:10px; display:block; }
   .pd-title{ font-size:32px; margin-bottom:10px; }
-  .pd-price{ font-family:'Fraunces'; font-size:22px; margin-bottom:18px; }
+  .pd-price{ font-family:'Fraunces'; font-size:22px; margin-bottom:10px; }
+  #pdStock .stock-note{ margin-top:0; margin-bottom:14px; }
   .pd-desc{ color:var(--ink-soft); font-size:15px; margin-bottom:28px; max-width:480px; }
   .pd-option{ margin-bottom:20px; max-width:380px; }
   .pd-qty-row{ display:flex; align-items:center; gap:14px; margin:26px 0; }
@@ -556,6 +562,25 @@
   .account-check{ display:flex; align-items:center; gap:9px; font-size:13px; color:var(--ink-soft); }
   .account-check input{ width:15px; height:15px; accent-color:var(--moss); }
   .account-note{ font-size:12px; color:var(--ink-soft); text-align:center; margin-top:18px; line-height:1.6; }
+
+  /* ============ POLICY / LEGAL PAGES ============ */
+  .policy-content h2{ font-family:'Fraunces'; font-size:21px; font-weight:500; margin-top:38px; margin-bottom:12px; }
+  .policy-content h2:first-of-type{ margin-top:0; }
+  .policy-content p{ color:var(--ink-soft); font-size:15px; line-height:1.75; margin-bottom:16px; }
+  .policy-content ul{ padding-left:22px; margin-bottom:16px; }
+  .policy-content li{ color:var(--ink-soft); font-size:15px; line-height:1.75; margin-bottom:8px; }
+  .policy-content a{ color:var(--moss); text-decoration:underline; }
+  .policy-content strong{ color:var(--ink); font-weight:500; }
+
+  /* ============ 404 PAGE ============ */
+  .error-page{
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    text-align:center; padding:40px 24px;
+  }
+  .error-logo{ width:60px; height:60px; border-radius:50%; margin-bottom:26px; box-shadow:0 12px 30px rgba(38,36,32,0.12); }
+  .error-code{ font-family:'Fraunces'; font-style:italic; font-weight:400; font-size:84px; color:var(--moss); line-height:1; margin-bottom:10px; }
+  .error-page h1{ font-size:27px; margin-bottom:12px; }
+  .error-page p{ color:var(--ink-soft); max-width:400px; margin:0 auto 30px; font-size:15px; }
 
   /* ============ TOAST ============ */
   .toast{
@@ -723,6 +748,18 @@ select.status-select{ padding:7px 10px; border:1px solid var(--line); background
 .theme-card h4{ font-family:'Fraunces'; font-size:16px; margin:0 0 4px; display:flex; align-items:center; gap:8px; }
 .theme-card p{ font-size:12px; color:var(--ink-soft); margin:0; }
 .theme-current-pill{ font-size:10px; letter-spacing:.06em; text-transform:uppercase; background:var(--moss); color:var(--paper-soft); padding:2px 8px; border-radius:20px; }
+
+/* -- Top products (Stats tab) -- */
+.top-product-row{ display:flex; align-items:center; gap:16px; padding:11px 0; border-bottom:1px solid var(--line); }
+.top-product-row .tp-name{ flex:0 0 220px; font-size:14px; }
+.top-product-row .tp-bar-wrap{ flex:1; background:var(--paper); height:10px; border-radius:6px; overflow:hidden; }
+.top-product-row .tp-bar{ height:100%; background:var(--moss); border-radius:6px; }
+.top-product-row .tp-value{ flex:0 0 130px; text-align:right; font-size:13px; color:var(--ink-soft); }
+@media (max-width: 640px){
+  .top-product-row{ flex-wrap:wrap; }
+  .top-product-row .tp-name{ flex:1 1 100%; }
+  .top-product-row .tp-value{ flex:0 0 auto; margin-left:auto; }
+}
 
 @media (max-width: 720px){
   .form-grid{ grid-template-columns:1fr; }
