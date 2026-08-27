@@ -227,6 +227,22 @@
   .hero-badge{ display:flex; align-items:center; gap:10px; font-size:12px; color:var(--ink-soft); letter-spacing:.02em; }
   .hero-badge svg{ width:20px; height:20px; flex-shrink:0; }
 
+  /* ============ IMPACT BANNER ============ */
+  .impact-banner{
+    background: var(--moss);
+    color: var(--paper-soft);
+    padding: 14px 0;
+  }
+  .impact-banner .wrap{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .impact-banner svg{ width: 17px; height: 17px; flex-shrink: 0; }
+  .impact-banner span{ font-size: 13px; letter-spacing: .03em; font-weight: 500; }
+
   /* ============ TRUST STRIP ============ */
   .trust{ padding:0 0 20px; }
   .trust .wrap{
