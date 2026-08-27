@@ -71,6 +71,7 @@
     <button class="admin-tab" data-panel="panelMessages">Messages <span class="count" id="msgTabCount">0</span></button>
     <button class="admin-tab" data-panel="panelReviews">Reviews</button>
     <button class="admin-tab" data-panel="panelNewsletter">Newsletter</button>
+    <button class="admin-tab" data-panel="panelTheme">Theme</button>
   </div>
 
   <!-- PRODUCTS -->
@@ -199,6 +200,16 @@
       <tbody id="newsletterTbody"></tbody>
     </table>
     <div class="table-empty" id="newsletterEmpty" style="display:none;">No subscribers yet.</div>
+  </section>
+
+  <!-- THEME -->
+  <section class="admin-panel" id="panelTheme">
+    <div class="admin-panel-head"><h2>Site Theme</h2></div>
+    <p class="lede" style="margin-bottom:24px; max-width:520px;">Pick a look for the public site. It updates for visitors as soon as you save — no code, no redeploy.</p>
+    <div class="theme-grid" id="themeGrid"></div>
+    <div class="form-actions" style="margin-top:26px;">
+      <button class="btn" id="saveThemeBtn">Save Theme</button>
+    </div>
   </section>
 
 </main>

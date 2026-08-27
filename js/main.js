@@ -576,7 +576,19 @@ if(!IS_SUPABASE_CONFIGURED){
   if(banner) banner.style.display = "block";
 }
 
+/* ---------------- THEME ---------------- */
+const THEME_CACHE_KEY = "kh_theme_cache";
+async function loadTheme(){
+  if(!IS_SUPABASE_CONFIGURED) return;
+  const { data, error } = await supabaseClient.from("site_settings").select("theme").eq("id", 1).single();
+  if(!error && data && data.theme){
+    document.documentElement.setAttribute("data-theme", data.theme);
+    try{ localStorage.setItem(THEME_CACHE_KEY, data.theme); } catch(e){}
+  }
+}
+
 /* ---------------- INIT ---------------- */
 renderCart();
+loadTheme();
 loadProducts();
 loadReviews();

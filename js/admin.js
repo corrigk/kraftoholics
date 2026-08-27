@@ -110,6 +110,7 @@ function loadEverything(){
   loadMessages();
   loadReviews();
   loadNewsletter();
+  loadThemeSetting();
 }
 
 /* ============================================================
@@ -438,6 +439,55 @@ document.getElementById("copyEmailsBtn").addEventListener("click", async () => {
   } catch(e){
     showToast("Couldn't copy — select and copy manually", true);
   }
+});
+
+/* ============================================================
+   THEME
+============================================================ */
+const THEMES = [
+  { id:"classic", name:"Classic Ink", desc:"Warm paper, ink & moss — the original look.", swatches:["#F2EEE4","#4B5842","#BB9457","#262420"] },
+  { id:"teal", name:"Teal Ocean", desc:"Seafoam whites, deep teal and sandy accents.", swatches:["#EAF3F3","#1E7F82","#E0A458","#1F3B3B"] },
+  { id:"flowers", name:"Flowers", desc:"Blush pinks, sage green, soft petal tones.", swatches:["#FBF1F4","#5F7A56","#E48AA0","#3B2A33"] },
+  { id:"winter", name:"Winter", desc:"Icy blues, frost white and a cranberry accent.", swatches:["#EDF1F5","#3B6E91","#C65B5B","#1E2A38"] }
+];
+let currentTheme = "classic";
+let savedTheme = "classic";
+
+function renderThemeGrid(){
+  const grid = document.getElementById("themeGrid");
+  grid.innerHTML = THEMES.map(t => `
+    <div class="theme-card ${t.id===currentTheme ? "selected" : ""}" data-theme-id="${t.id}">
+      <div class="theme-swatches">${t.swatches.map(c => `<span class="theme-swatch" style="background:${c}"></span>`).join("")}</div>
+      <h4>${t.name} ${t.id===savedTheme ? '<span class="theme-current-pill">Live</span>' : ""}</h4>
+      <p>${t.desc}</p>
+    </div>`).join("");
+}
+
+document.getElementById("themeGrid").addEventListener("click", e => {
+  const card = e.target.closest(".theme-card");
+  if(!card) return;
+  currentTheme = card.dataset.themeId;
+  renderThemeGrid();
+});
+
+async function loadThemeSetting(){
+  const { data, error } = await supabaseClient.from("site_settings").select("theme").eq("id", 1).single();
+  if(!error && data && data.theme){ currentTheme = data.theme; savedTheme = data.theme; }
+  renderThemeGrid();
+}
+
+document.getElementById("saveThemeBtn").addEventListener("click", async () => {
+  const btn = document.getElementById("saveThemeBtn");
+  btn.disabled = true; btn.textContent = "Saving…";
+  const { error } = await supabaseClient
+    .from("site_settings")
+    .update({ theme: currentTheme, updated_at: new Date().toISOString() })
+    .eq("id", 1);
+  btn.disabled = false; btn.textContent = "Save Theme";
+  if(error){ showToast("Couldn't save theme", true); return; }
+  savedTheme = currentTheme;
+  renderThemeGrid();
+  showToast("Theme saved — live on the site now");
 });
 
 /* ---------------- INIT ---------------- */
