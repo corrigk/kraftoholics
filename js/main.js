@@ -427,25 +427,8 @@ document.getElementById("payBtn").addEventListener("click", async () => {
   window.location.href = data.url;
 });
 
-// After a Stripe redirect back to the site, show the right message and
-// clean up. The order itself is created by the stripe-webhook Edge
-// Function once Stripe confirms payment — not from this redirect alone.
-(function handleCheckoutReturn(){
-  const params = new URLSearchParams(window.location.search);
-  const status = params.get("checkout");
-  if(status === "success"){
-    cart = [];
-    saveCart();
-    showToast("Payment received — thank you! Check your email for a receipt.", "check");
-  } else if(status === "cancelled"){
-    showToast("Checkout cancelled — your cart is still here", "info");
-  }
-  if(status){
-    params.delete("checkout");
-    const qs = params.toString();
-    window.history.replaceState({}, "", window.location.pathname + (qs ? "?"+qs : "") + window.location.hash);
-  }
-})();
+// (checkout-return handling moved below — see INIT section — since it
+// calls showToast(), which isn't defined until later in this file)
 
 /* ---------------- REVIEWS ---------------- */
 const reviewsGrid = document.getElementById("reviewsGrid");
@@ -580,11 +563,11 @@ const TOAST_ICONS = {
   info: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><path d="M12 8v.01M12 11v5"/></svg>`
 };
 let toastTimer;
-function showToast(msg, icon="check"){
+function showToast(msg, icon="check", duration=2800){
   clearTimeout(toastTimer);
   toastEl.innerHTML = `${TOAST_ICONS[icon] || ""}<span>${msg}</span>`;
   toastEl.classList.add("show");
-  toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2800);
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), duration);
 }
 
 /* ---------------- NAV / MISC ---------------- */
@@ -621,3 +604,25 @@ renderCart();
 loadTheme();
 loadProducts();
 loadReviews();
+
+// Handle a redirect back from Stripe Checkout. Runs here (not earlier in
+// the file) because it depends on showToast/cart/saveCart all being
+// defined already. The order itself is created by the stripe-webhook
+// Edge Function once Stripe confirms payment — not by this redirect.
+(function handleCheckoutReturn(){
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get("checkout");
+  if(status === "success"){
+    cart = [];
+    saveCart();
+    renderCart();
+    showToast("Payment received — thank you! Check your email for a receipt.", "check", 7000);
+  } else if(status === "cancelled"){
+    showToast("Checkout cancelled — your cart is still here", "info", 5000);
+  }
+  if(status){
+    params.delete("checkout");
+    const qs = params.toString();
+    window.history.replaceState({}, "", window.location.pathname + (qs ? "?"+qs : "") + window.location.hash);
+  }
+})();

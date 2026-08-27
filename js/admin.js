@@ -305,6 +305,7 @@ async function loadOrders(){
             ${["placed","shipped","completed","cancelled"].map(s => `<option value="${s}" ${o.status===s?"selected":""}>${s[0].toUpperCase()+s.slice(1)}</option>`).join("")}
           </select>
         </td>
+        <td><div class="row-actions"><button data-delete-order="${o.id}" class="danger">Delete</button></div></td>
       </tr>`;
   }).join("");
 }
@@ -313,6 +314,15 @@ document.getElementById("ordersTbody").addEventListener("change", async e => {
   if(!e.target.classList.contains("status-select")) return;
   const { error } = await supabaseClient.from("orders").update({ status: e.target.value }).eq("id", e.target.dataset.id);
   showToast(error ? "Couldn't update order" : "Order status updated", !!error);
+});
+
+document.getElementById("ordersTbody").addEventListener("click", async e => {
+  const btn = e.target.closest("[data-delete-order]");
+  if(!btn) return;
+  if(!confirm("Delete this order? This can't be undone.")) return;
+  const { error } = await supabaseClient.from("orders").delete().eq("id", btn.dataset.deleteOrder);
+  showToast(error ? "Couldn't delete order" : "Order deleted");
+  loadOrders();
 });
 
 /* ============================================================
