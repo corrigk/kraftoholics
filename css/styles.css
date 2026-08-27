@@ -305,8 +305,9 @@
   /* ============ STORY ============ */
   .story{ background:var(--white); }
   .story .wrap{ display:grid; grid-template-columns:0.9fr 1.1fr; gap:64px; align-items:center; }
-  .story-art{ background:var(--paper); border:1px solid var(--line); aspect-ratio:1/1.05; display:flex; align-items:center; justify-content:center; }
+  .story-art{ background:var(--paper); border:1px solid var(--line); aspect-ratio:4/3; overflow:hidden; box-shadow:0 20px 50px rgba(38,36,32,0.10); }
   .story-art svg{ width:62%; height:62%; }
+  .story-art img{ width:100%; height:100%; object-fit:cover; display:block; }
   .story-text p{ color:var(--ink-soft); font-size:16px; }
   .story-sign{ font-family:'Fraunces'; font-style:italic; font-size:22px; margin-top:22px; color:var(--moss); }
 
