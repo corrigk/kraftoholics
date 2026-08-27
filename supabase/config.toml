@@ -1,0 +1,14 @@
+# Supabase project configuration.
+#
+# Both payment functions need verify_jwt = false:
+# - create-checkout-session is called by anonymous shoppers who
+#   aren't logged in, so there's no user session JWT to check.
+# - stripe-webhook is called directly by Stripe's servers, which
+#   send Stripe's own signature instead of a Supabase credential
+#   (and the function verifies that signature itself, in code).
+
+[functions.create-checkout-session]
+verify_jwt = false
+
+[functions.stripe-webhook]
+verify_jwt = false

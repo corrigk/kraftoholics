@@ -164,11 +164,20 @@ productGrid.addEventListener("click", e => {
 
 /* ---------------- CART (persisted to this browser via localStorage) ---------------- */
 const CART_KEY = "kh_cart_v1";
+function makeLineId(){ return "l" + Date.now() + Math.random().toString(36).slice(2,7); }
+
 let cart = [];
-try{ cart = JSON.parse(localStorage.getItem(CART_KEY)) || []; } catch(e){ cart = []; }
+try{
+  const raw = JSON.parse(localStorage.getItem(CART_KEY)) || [];
+  cart = raw.map(i => ({ lineId: i.lineId || makeLineId(), id: i.id, qty: i.qty, options: i.options || {} }));
+} catch(e){ cart = []; }
 
 function saveCart(){
   try{ localStorage.setItem(CART_KEY, JSON.stringify(cart)); } catch(e){ /* storage unavailable — cart just won't persist */ }
+}
+function formatOptions(options){
+  if(!options) return "";
+  return Object.entries(options).filter(([,v]) => v && v !== "As shown").map(([,v]) => v).join(" · ");
 }
 
 const cartCountEl = document.getElementById("cartCount");
@@ -178,9 +187,10 @@ const drawerBody = document.getElementById("drawerBody");
 const drawerFoot = document.getElementById("drawerFoot");
 const subtotalEl = document.getElementById("subtotal");
 
-function addToCart(id, qty=1){
-  const existing = cart.find(i => String(i.id) === String(id));
-  if(existing){ existing.qty += qty; } else { cart.push({ id, qty }); }
+function addToCart(id, qty=1, options={}){
+  const optKey = JSON.stringify(options || {});
+  const existing = cart.find(i => String(i.id) === String(id) && JSON.stringify(i.options||{}) === optKey);
+  if(existing){ existing.qty += qty; } else { cart.push({ lineId: makeLineId(), id, qty, options: options || {} }); }
   saveCart();
   renderCart();
   const p = findProduct(id);
@@ -209,18 +219,20 @@ function renderCart(){
     const p = findProduct(item.id);
     if(!p) return;
     subtotal += p.price * item.qty;
+    const optText = formatOptions(item.options);
     const row = document.createElement("div");
     row.className = "cart-item";
     row.innerHTML = `
       <div class="cart-item-media">${productMediaHTML(p)}</div>
       <div class="cart-item-info">
         <h5>${escapeHtml(p.name)}</h5>
+        ${optText ? `<div style="font-size:12px; color:var(--ink-soft); margin:-2px 0 4px;">${escapeHtml(optText)}</div>` : ""}
         <div class="price">$${Number(p.price).toFixed(2)}</div>
         <div class="qty-row">
-          <button class="qty-minus" data-id="${p.id}">−</button>
+          <button class="qty-minus" data-line-id="${item.lineId}">−</button>
           <span>${item.qty}</span>
-          <button class="qty-plus" data-id="${p.id}">+</button>
-          <button class="remove-btn" data-id="${p.id}">Remove</button>
+          <button class="qty-plus" data-line-id="${item.lineId}">+</button>
+          <button class="remove-btn" data-line-id="${item.lineId}">Remove</button>
         </div>
       </div>`;
     drawerBody.appendChild(row);
@@ -229,16 +241,16 @@ function renderCart(){
 }
 
 drawerBody.addEventListener("click", e => {
-  const id = e.target.dataset.id;
-  if(!id) return;
+  const lineId = e.target.dataset.lineId;
+  if(!lineId) return;
   if(e.target.classList.contains("qty-plus")){
-    cart.find(i=>String(i.id)===String(id)).qty++;
+    cart.find(i=>i.lineId===lineId).qty++;
   } else if(e.target.classList.contains("qty-minus")){
-    const item = cart.find(i=>String(i.id)===String(id));
+    const item = cart.find(i=>i.lineId===lineId);
     item.qty--;
-    if(item.qty<=0) cart = cart.filter(i=>String(i.id)!==String(id));
+    if(item.qty<=0) cart = cart.filter(i=>i.lineId!==lineId);
   } else if(e.target.classList.contains("remove-btn")){
-    cart = cart.filter(i=>String(i.id)!==String(id));
+    cart = cart.filter(i=>i.lineId!==lineId);
   }
   saveCart();
   renderCart();
@@ -278,20 +290,20 @@ function openProductPage(id){
     const sizes = (p.sizes && p.sizes.length) ? p.sizes : BRACELET_SIZES;
     optionsEl.innerHTML = `
       <div class="pd-option"><label class="field-label">Rope color</label>
-        <select class="field">${ropeList.map(c=>`<option>${escapeHtml(c)}</option>`).join("")}</select></div>
+        <select class="field" data-option-label="Rope Color">${ropeList.map(c=>`<option>${escapeHtml(c)}</option>`).join("")}</select></div>
       <div class="pd-option"><label class="field-label">Charm</label>
-        <select class="field">${charms.map(c=>`<option>${escapeHtml(c)}</option>`).join("")}</select></div>
+        <select class="field" data-option-label="Charm">${charms.map(c=>`<option>${escapeHtml(c)}</option>`).join("")}</select></div>
       <div class="pd-option"><label class="field-label">Wrist size</label>
-        <select class="field">${sizes.map(c=>`<option>${escapeHtml(c)}</option>`).join("")}</select></div>
+        <select class="field" data-option-label="Size">${sizes.map(c=>`<option>${escapeHtml(c)}</option>`).join("")}</select></div>
       <div class="pd-option"><label class="field-label">Personalize with a name (optional)</label>
-        <input class="field" maxlength="20" placeholder="e.g. Sophia"></div>`;
+        <input class="field" data-option-label="Name" maxlength="20" placeholder="e.g. Sophia"></div>`;
   } else {
     const sizes = (p.sizes && p.sizes.length) ? p.sizes : PRINT_SIZES;
     optionsEl.innerHTML = `
       <div class="pd-option"><label class="field-label">Size</label>
-        <select class="field">${sizes.map(c=>`<option>${escapeHtml(c)}</option>`).join("")}</select></div>
+        <select class="field" data-option-label="Size">${sizes.map(c=>`<option>${escapeHtml(c)}</option>`).join("")}</select></div>
       <div class="pd-option"><label class="field-label">Add a name or verse (optional)</label>
-        <input class="field" maxlength="40" placeholder="e.g. Philippians 4:13"></div>`;
+        <input class="field" data-option-label="Note" maxlength="40" placeholder="e.g. Philippians 4:13"></div>`;
   }
 
   const related = PRODUCTS.filter(x => x.category===p.category && String(x.id)!==String(p.id)).slice(0,3);
@@ -312,7 +324,14 @@ document.getElementById("pdBack").addEventListener("click", e => { e.preventDefa
 document.getElementById("pdClose").addEventListener("click", closeProductPage);
 document.getElementById("pdQtyPlus").addEventListener("click", () => { pdQty++; document.getElementById("pdQty").textContent = pdQty; });
 document.getElementById("pdQtyMinus").addEventListener("click", () => { if(pdQty>1) pdQty--; document.getElementById("pdQty").textContent = pdQty; });
-document.getElementById("pdAddBtn").addEventListener("click", () => { addToCart(pdCurrentId, pdQty); closeProductPage(); });
+document.getElementById("pdAddBtn").addEventListener("click", () => {
+  const options = {};
+  document.querySelectorAll("#pdOptions [data-option-label]").forEach(el => {
+    if(el.value && el.value.trim()) options[el.dataset.optionLabel] = el.value.trim();
+  });
+  addToCart(pdCurrentId, pdQty, options);
+  closeProductPage();
+});
 document.getElementById("pdRelated").addEventListener("click", e => {
   const card = e.target.closest(".mini-card");
   if(card) openProductPage(card.dataset.id);
@@ -347,17 +366,10 @@ document.getElementById("accountForm").addEventListener("submit", e => {
   showToast(acctMode === "signup" ? `Welcome${name ? ", " + name : ""}! (placeholder account)` : "Logged in — placeholder only", "check");
 });
 
-/* ---------------- CHECKOUT MODAL ---------------- */
+/* ---------------- CHECKOUT MODAL — hands off to Stripe Checkout ---------------- */
 const modal = document.getElementById("checkoutModal");
-const dots = [document.getElementById("dot1"), document.getElementById("dot2"), document.getElementById("dot3")];
-const steps = [document.getElementById("step1"), document.getElementById("step2"), document.getElementById("step3")];
 
-function goToStep(n){
-  steps.forEach((s,i)=> s.classList.toggle("active", i===n));
-  dots.forEach((d,i)=>{ d.classList.toggle("active", i===n); d.classList.toggle("done", i<n); });
-}
-function openModal(){
-  if(cart.length===0){ showToast("Your cart is empty — add something first", "info"); return; }
+function renderModalCart(){
   const modalCartList = document.getElementById("modalCartList");
   modalCartList.innerHTML = "";
   let subtotal = 0;
@@ -365,13 +377,18 @@ function openModal(){
     const p = findProduct(item.id);
     if(!p) return;
     subtotal += p.price*item.qty;
+    const optText = formatOptions(item.options);
     const row = document.createElement("div");
-    row.style.cssText = "display:flex;justify-content:space-between;font-size:14px;padding:6px 0;color:var(--ink-soft);";
-    row.innerHTML = `<span>${escapeHtml(p.name)} × ${item.qty}</span><span>$${(p.price*item.qty).toFixed(2)}</span>`;
+    row.style.cssText = "display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:8px 0;color:var(--ink-soft);";
+    row.innerHTML = `<span>${escapeHtml(p.name)}${optText ? ` <span style="opacity:.75;">(${escapeHtml(optText)})</span>` : ""} × ${item.qty}</span><span style="white-space:nowrap;">$${(p.price*item.qty).toFixed(2)}</span>`;
     modalCartList.appendChild(row);
   });
   document.getElementById("modalSubtotal").textContent = `$${subtotal.toFixed(2)}`;
-  goToStep(0);
+}
+
+function openModal(){
+  if(cart.length===0){ showToast("Your cart is empty — add something first", "info"); return; }
+  renderModalCart();
   modal.classList.add("show");
   backdrop.classList.add("show");
 }
@@ -379,44 +396,56 @@ function closeModal(){ modal.classList.remove("show"); backdrop.classList.remove
 
 document.getElementById("checkoutBtn").addEventListener("click", () => { closeDrawer(); openModal(); });
 document.getElementById("modalClose").addEventListener("click", closeModal);
-document.getElementById("toStep2").addEventListener("click", () => goToStep(1));
 
-document.getElementById("detailsForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  const inputs = e.target.querySelectorAll("input");
-  const [firstName, lastName, email, address, city, zip] = [...inputs].map(i => i.value.trim());
-  const subtotal = cart.reduce((s,i) => { const p = findProduct(i.id); return p ? s + p.price*i.qty : s; }, 0);
-
-  let orderLabel = "KH-" + Math.floor(1000 + Math.random()*9000);
-
-  if(IS_SUPABASE_CONFIGURED){
-    const { data: order, error: orderErr } = await supabaseClient
-      .from("orders")
-      .insert({ customer_name:`${firstName} ${lastName}`.trim(), email, address, city, zip, subtotal })
-      .select()
-      .single();
-
-    if(!orderErr && order){
-      orderLabel = "KH-" + order.id.slice(0,8).toUpperCase();
-      const items = cart.map(i => {
-        const p = findProduct(i.id);
-        return { order_id: order.id, product_id: typeof p.id === "string" && p.id.startsWith("d") ? null : p.id, product_name: p.name, unit_price: p.price, qty: i.qty };
-      });
-      await supabaseClient.from("order_items").insert(items);
-    }
+document.getElementById("payBtn").addEventListener("click", async () => {
+  if(!IS_SUPABASE_CONFIGURED){
+    showToast("Demo mode — connect Supabase & Stripe to enable checkout", "info");
+    return;
   }
+  const btn = document.getElementById("payBtn");
+  btn.disabled = true; btn.textContent = "Redirecting to payment…";
 
-  goToStep(2);
-  document.getElementById("orderNo").textContent = "#" + orderLabel;
-  document.getElementById("orderModeNote").textContent = IS_SUPABASE_CONFIGURED
-    ? "Your order has been recorded — no real payment was processed in this template."
-    : "Demo mode — this order wasn't saved anywhere. Connect Supabase to start receiving real orders.";
-  cart = [];
-  saveCart();
-  renderCart();
-  e.target.reset();
+  const items = cart.map(item => {
+    const p = findProduct(item.id);
+    return { id: p.id, name: p.name, price: p.price, qty: item.qty, options: item.options || {} };
+  });
+  // The base URL Stripe should send the customer back to (handles GitHub Pages
+  // project subpaths like username.github.io/repo/ automatically).
+  const returnBase = window.location.href.split(/[?#]/)[0].replace(/index\.html$/, "");
+
+  const { data, error } = await supabaseClient.functions.invoke("create-checkout-session", {
+    body: { items, returnBase }
+  });
+
+  btn.disabled = false; btn.textContent = "Continue to Payment";
+
+  if(error || !data || !data.url){
+    console.error(error);
+    showToast("Couldn't start checkout — try again in a moment", "info");
+    return;
+  }
+  window.location.href = data.url;
 });
-document.getElementById("closeConfirm").addEventListener("click", closeModal);
+
+// After a Stripe redirect back to the site, show the right message and
+// clean up. The order itself is created by the stripe-webhook Edge
+// Function once Stripe confirms payment — not from this redirect alone.
+(function handleCheckoutReturn(){
+  const params = new URLSearchParams(window.location.search);
+  const status = params.get("checkout");
+  if(status === "success"){
+    cart = [];
+    saveCart();
+    showToast("Payment received — thank you! Check your email for a receipt.", "check");
+  } else if(status === "cancelled"){
+    showToast("Checkout cancelled — your cart is still here", "info");
+  }
+  if(status){
+    params.delete("checkout");
+    const qs = params.toString();
+    window.history.replaceState({}, "", window.location.pathname + (qs ? "?"+qs : "") + window.location.hash);
+  }
+})();
 
 /* ---------------- REVIEWS ---------------- */
 const reviewsGrid = document.getElementById("reviewsGrid");
